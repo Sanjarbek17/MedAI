@@ -1,4 +1,4 @@
-# COVID-19 Chest X-Ray Classifier
+# MedikAI Classifier - COVID-19 Chest X-Ray Analysis
 
 A Flask web application for classifying chest X-ray images to detect COVID-19, pneumonia, and normal cases using AI.
 
@@ -13,7 +13,7 @@ A Flask web application for classifying chest X-ray images to detect COVID-19, p
 ## Project Structure
 
 ```
-lungs/
+MedikAI-Classifier/
 ├── app.py                 # Flask application
 ├── requirements.txt       # Python dependencies
 ├── templates/
