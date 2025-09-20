@@ -5,6 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedikAI Classifier - COVID-19 Chest X-Ray Analysis</title>
+
+    <!-- Adaptive favicon for dark/light mode -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHN0eWxlPgoucGF0aCB7CiAgZmlsbDogIzJCNkNCMDsKfQpAbWVkaWEgKHByZWZlcnMtY29sb3Itc2NoZW1lOiBkYXJrKSB7CiAgLnBhdGggewogICAgZmlsbDogI0ZGRkZGRjsKICB9Cn0KQHN1cHBvcnRzIChub3Q6ICguXzEgeyBjb2xvcjogIzI4MmMyZjsgfSkpIHsKICAucGF0aCB7CiAgICBmaWxsOiAjRkZGRkZGOwogIH0KfQo8L3N0eWxlPgo8cGF0aCBjbGFzcz0icGF0aCIgZD0iTTkuNSAyaDNjMSAwIDIgMSAyIDJzLTEgMi0yIDJoLTNjLTEgMC0yLTEtMi0ycy0xLTIgMi0yWm0tMyAzVjRIMy41QzIgNCAwLjUgNS41IDAuNSA3djVjMCAxLjUgMS41IDMgMyAzaDJWOWMwLTEuNSAxLjUtMyAzLTNabTcgMGMxLjUgMCAzIDEuNSAzIDN2NmgyYzEuNSAwIDMtMS41IDMtM1Y3YzAtMS41LTEuNS0zLTMtM0gxNlY1WiIvPgo8L3N2Zz4K">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHN0eWxlPgoucGF0aCB7CiAgZmlsbDogIzJCNkNCMDsKfQpAbWVkaWEgKHByZWZlcnMtY29sb3Itc2NoZW1lOiBkYXJrKSB7CiAgLnBhdGggewogICAgZmlsbDogI0ZGRkZGRjsKICB9Cn0KQHN1cHBvcnRzIChub3Q6ICguXzEgeyBjb2xvcjogIzI4MmMyZjsgfSkpIHsKICAucGF0aCB7CiAgICBmaWxsOiAjRkZGRkZGOwogIH0KfQo8L3N0eWxlPgo8cGF0aCBjbGFzcz0icGF0aCIgZD0iTTkuNSAyaDNjMSAwIDIgMSAyIDJzLTEgMi0yIDJoLTNjLTEgMC0yLTEtMi0ycy0xLTIgMi0yWm0tMyAzVjRIMy41QzIgNCAwLjUgNS41IDAuNSA3djVjMCAxLjUgMS41IDMgMyAzaDJWOWMwLTEuNSAxLjUtMyAzLTNabTcgMGMxLjUgMCAzIDEuNSAzIDN2NmgyYzEuNSAwIDMtMS41IDMtM1Y3YzAtMS41LTEuNS0zLTMtM0gxNlY1WiIvPgo8L3N2Zz4K">
+
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>tailwind.config = {theme: {extend: {colors: {primary: '#2B6CB0', secondary: '#48BB78'}, borderRadius: {'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px'}}}}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
