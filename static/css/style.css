@@ -1,0 +1,81 @@
+:where([class^="ri-"])::before { 
+    content: "\f3c2"; 
+}
+
+body { 
+    font-family: 'Inter', sans-serif; 
+}
+
+.upload-zone { 
+    transition: all 0.3s ease; 
+}
+
+.upload-zone:hover { 
+    border-color: #2B6CB0; 
+    background-color: #EBF8FF; 
+}
+
+.upload-zone.dragover { 
+    border-color: #2B6CB0; 
+    background-color: #EBF8FF; 
+    transform: scale(1.02); 
+}
+
+.prediction-card { 
+    animation: slideIn 0.5s ease-out; 
+}
+
+@keyframes slideIn { 
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    } 
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    } 
+}
+
+.loading-spinner { 
+    animation: spin 1s linear infinite; 
+}
+
+@keyframes spin { 
+    from { 
+        transform: rotate(0deg); 
+    } 
+    to { 
+        transform: rotate(360deg); 
+    } 
+}
+
+.confidence-bar { 
+    transition: width 0.8s ease-out; 
+}
+
+.result-covid { 
+    background: linear-gradient(135deg, #FED7D7 0%, #FEB2B2 100%); 
+}
+
+.result-normal { 
+    background: linear-gradient(135deg, #C6F6D5 0%, #9AE6B4 100%); 
+}
+
+.result-pneumonia { 
+    background: linear-gradient(135deg, #FEEBC8 0%, #F6AD55 100%); 
+}
+
+/* Error message styles */
+.error-message {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #B91C1C;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    max-width: 400px;
+}

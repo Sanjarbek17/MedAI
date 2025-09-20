@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 Chest X-Ray Classifier</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config = {theme: {extend: {colors: {primary: '#2B6CB0', secondary: '#48BB78'}, borderRadius: {'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 flex items-center justify-center bg-primary rounded-lg">
+                        <i class="ri-lungs-line text-white text-lg"></i>
+                    </div>
+                    <span class="text-xl font-semibold text-gray-900">MedAI Classifier</span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="#about" class="text-gray-600 hover:text-primary transition-colors">About</a>
+                    <a href="#" class="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                            <i class="ri-github-line"></i>
+                        </div>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div id="homepage" class="text-center mb-12">
+            <div class="max-w-3xl mx-auto">
+                <h1 class="text-4xl font-bold text-gray-900 mb-6">COVID-19 Chest X-Ray Classifier</h1>
+                <p class="text-xl text-gray-600 mb-8">Upload chest X-ray images to receive AI-powered classification
+                    results for COVID-19, pneumonia, and normal cases using advanced deep learning technology.</p>
+
+                <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <div id="upload-section">
+                        <div class="upload-zone border-2 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer"
+                            id="uploadZone">
+                            <div
+                                class="w-16 h-16 flex items-center justify-center mx-auto mb-4 bg-gray-100 rounded-full">
+                                <i class="ri-cloud-line text-2xl text-gray-400"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Drop your X-ray image here</h3>
+                            <p class="text-gray-500 mb-4">or click to browse files</p>
+                            <button
+                                class="bg-primary text-white px-6 py-3 !rounded-button font-medium hover:bg-blue-700 transition-colors whitespace-nowrap"
+                                id="browseBtn">
+                                Browse Files
+                            </button>
+                            <p class="text-sm text-gray-400 mt-4">Supports JPG, JPEG, PNG files up to 10MB</p>
+                        </div>
+                        <input type="file" id="fileInput" class="hidden" accept=".jpg,.jpeg,.png">
+                    </div>
+
+                    <div id="preview-section" class="hidden mt-8">
+                        <div class="flex items-start space-x-6 p-6 bg-gray-50 rounded-xl">
+                            <div class="flex-shrink-0">
+                                <img id="previewImage" class="w-32 h-32 object-cover rounded-lg shadow-md"
+                                    alt="Preview">
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-gray-900 mb-2" id="fileName">chest-xray.jpg</h4>
+                                <p class="text-sm text-gray-500 mb-4" id="fileSize">2.4 MB</p>
+                                <div class="flex space-x-3">
+                                    <button
+                                        class="bg-primary text-white px-6 py-2 !rounded-button font-medium hover:bg-blue-700 transition-colors whitespace-nowrap"
+                                        id="predictBtn">
+                                        Analyze X-Ray
+                                    </button>
+                                    <button
+                                        class="text-gray-600 px-4 py-2 border border-gray-300 !rounded-button hover:bg-gray-50 transition-colors whitespace-nowrap"
+                                        id="removeBtn">
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="loading-section" class="hidden text-center py-12">
+                        <div class="w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                            <i class="ri-loader-4-line text-3xl text-primary loading-spinner"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Processing X-Ray Image</h3>
+                        <p class="text-gray-500">Our AI model is analyzing your image...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="results-section" class="hidden">
+            <div class="grid lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Uploaded X-Ray</h3>
+                        <img id="resultImage" class="w-full rounded-xl shadow-md mb-4" alt="X-Ray Result">
+                        <div class="text-sm text-gray-500">
+                            <p id="resultFileName">chest-xray-001.jpg</p>
+                            <p id="resultFileSize">2.4 MB • 1024×1024 pixels</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-3">
+                    <div class="prediction-card bg-white rounded-2xl shadow-lg p-8">
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-2xl font-bold text-gray-900">Classification Result</h3>
+                                <div class="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full">
+                                    <i class="ri-check-line text-green-600"></i>
+                                </div>
+                            </div>
+                            <div id="predictionResult" class="result-normal p-6 rounded-xl mb-6">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-2xl font-bold text-gray-900" id="predictionClass">Normal</h4>
+                                    <span class="text-3xl font-bold text-gray-900" id="confidenceScore">94%</span>
+                                </div>
+                                <div class="w-full bg-white bg-opacity-50 rounded-full h-3">
+                                    <div class="confidence-bar bg-white h-3 rounded-full" id="confidenceBar"
+                                        style="width: 94%"></div>
+                                </div>
+                                <p class="text-sm text-gray-700 mt-2">Confidence Level</p>
+                            </div>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <i class="ri-alert-line text-yellow-600"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-yellow-800 mb-1">Medical Disclaimer</h5>
+                                        <p class="text-sm text-yellow-700">This tool is for research and educational
+                                            purposes only. Results should not be used for medical diagnosis or treatment
+                                            decisions. Always consult with qualified healthcare professionals.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 mb-6">
+                                <div class="text-center p-4 bg-gray-50 rounded-xl">
+                                    <div
+                                        class="w-8 h-8 flex items-center justify-center mx-auto mb-2 bg-red-100 rounded-full">
+                                        <i class="ri-virus-line text-red-600"></i>
+                                    </div>
+                                    <p class="text-sm font-medium text-gray-900">COVID-19</p>
+                                    <p class="text-xs text-gray-500" id="covidProb">3%</p>
+                                </div>
+                                <div class="text-center p-4 bg-gray-50 rounded-xl">
+                                    <div
+                                        class="w-8 h-8 flex items-center justify-center mx-auto mb-2 bg-green-100 rounded-full">
+                                        <i class="ri-heart-pulse-line text-green-600"></i>
+                                    </div>
+                                    <p class="text-sm font-medium text-gray-900">Normal</p>
+                                    <p class="text-xs text-gray-500" id="normalProb">94%</p>
+                                </div>
+                                <div class="text-center p-4 bg-gray-50 rounded-xl">
+                                    <div
+                                        class="w-8 h-8 flex items-center justify-center mx-auto mb-2 bg-orange-100 rounded-full">
+                                        <i class="ri-lungs-line text-orange-600"></i>
+                                    </div>
+                                    <p class="text-sm font-medium text-gray-900">Pneumonia</p>
+                                    <p class="text-xs text-gray-500" id="pneumoniaProb">3%</p>
+                                </div>
+                            </div>
+                            <button
+                                class="w-full bg-primary text-white py-3 !rounded-button font-medium hover:bg-blue-700 transition-colors whitespace-nowrap"
+                                id="tryAnotherBtn">
+                                Try Another X-Ray
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section id="about" class="mt-20 py-16 bg-white rounded-2xl shadow-lg">
+            <div class="max-w-4xl mx-auto px-8">
+                <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">About This Tool</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Dataset & Model</h3>
+                        <p class="text-gray-600 mb-4">Our AI model is trained on a comprehensive dataset of over 15,000
+                            chest X-ray images, including COVID-19 positive cases, pneumonia cases, and normal healthy
+                            lungs.</p>
+                        <p class="text-gray-600">The deep learning model uses advanced convolutional neural networks
+                            (CNN) architecture optimized for medical image classification with 94% accuracy on
+                            validation data.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Research Purpose</h3>
+                        <p class="text-gray-600 mb-4">This tool demonstrates the potential of AI in medical imaging
+                            analysis and serves as an educational resource for understanding machine learning
+                            applications in healthcare.</p>
+                        <p class="text-gray-600">Built with PyTorch and deployed using modern web technologies for fast,
+                            reliable predictions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 flex items-center justify-center bg-primary rounded">
+                        <i class="ri-lungs-line text-white text-sm"></i>
+                    </div>
+                    <span class="text-gray-600">MedAI Classifier</span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-primary transition-colors">Privacy</a>
+                    <a href="#" class="text-gray-500 hover:text-primary transition-colors">Terms</a>
+                    <a href="#" class="text-gray-500 hover:text-primary transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+
+</html>
