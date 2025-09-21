@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAI - Patient App Download</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="download-container">
+        <header class="download-header">
+            <div class="logo">
+                <i class="fas fa-heart-pulse"></i>
+                <h1>MedAI</h1>
+            </div>
+            <p class="subtitle">Emergency Medical Assistance at Your Fingertips</p>
+        </header>
+
+        <main class="download-main">
+            <div class="app-info">
+                <div class="app-icon">
+                    <i class="fas fa-user-injured"></i>
+                </div>
+                <h2>Patient App</h2>
+                <p class="app-description">
+                    The MedAI Patient app allows you to:
+                </p>
+                <ul class="features-list">
+                    <li><i class="fas fa-ambulance"></i> Request emergency ambulance services</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Share your real-time location</li>
+                    <li><i class="fas fa-eye"></i> Track incoming ambulance in real-time</li>
+                    <li><i class="fas fa-x-ray"></i> Upload and analyze chest X-rays</li>
+                    <li><i class="fas fa-robot"></i> Get AI-powered medical assistance</li>
+                    <li><i class="fas fa-shield-alt"></i> Secure and HIPAA-compliant</li>
+                </ul>
+            </div>
+
+            <div class="download-section">
+                <h3>Download the Patient App</h3>
+
+                <div class="download-buttons">
+                    <a href="/static/downloads/medai-patient.apk" class="download-btn primary" download>
+                        <i class="fab fa-android"></i>
+                        <div class="btn-content">
+                            <span class="btn-title">Download for Android</span>
+                            <span class="btn-subtitle">MedAI Patient v1.0.0</span>
+                        </div>
+                    </a>
+
+                    <div class="coming-soon">
+                        <div class="download-btn disabled">
+                            <i class="fab fa-apple"></i>
+                            <div class="btn-content">
+                                <span class="btn-title">Coming Soon</span>
+                                <span class="btn-subtitle">iOS Version</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="installation-guide">
+                    <h4><i class="fas fa-info-circle"></i> Installation Instructions</h4>
+                    <ol>
+                        <li>Click the "Download for Android" button above</li>
+                        <li>Allow downloads from unknown sources in your device settings if prompted</li>
+                        <li>Open the downloaded APK file</li>
+                        <li>Follow the installation prompts</li>
+                        <li>Grant necessary permissions for location and camera access</li>
+                        <li>You're ready to use MedAI Patient!</li>
+                    </ol>
+                </div>
+
+                <div class="system-requirements">
+                    <h4><i class="fas fa-mobile-alt"></i> System Requirements</h4>
+                    <ul>
+                        <li>Android 7.0 (API level 24) or higher</li>
+                        <li>At least 50MB of free storage space</li>
+                        <li>Internet connection required</li>
+                        <li>GPS/Location services enabled</li>
+                        <li>Camera access for X-ray uploads</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="safety-notice">
+                <div class="notice-content">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Important Safety Notice</h4>
+                    <p>
+                        This app is designed to assist with medical emergencies but should not replace professional
+                        medical judgment.
+                        In life-threatening situations, always call your local emergency services (911, 112, etc.)
+                        immediately.
+                    </p>
+                </div>
+            </div>
+
+            <div class="app-preview">
+                <h4>App Screenshots</h4>
+                <div class="screenshots">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-mobile-alt"></i>
+                        <p>Emergency Request</p>
+                    </div>
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-map"></i>
+                        <p>Real-time Tracking</p>
+                    </div>
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-x-ray"></i>
+                        <p>X-ray Analysis</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="download-footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="/driver">Driver App</a>
+                    <a href="/api">API Documentation</a>
+                    <a href="/">Back to Home</a>
+                </div>
+                <p>&copy; 2025 MedAI. All rights reserved.</p>
+                <p class="version-info">Patient App Version 1.0.0 | Build 2025.09.21</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Add download tracking
+        document.querySelector('.download-btn.primary').addEventListener('click', function () {
+            // Track download event
+            console.log('Patient APK download initiated');
+
+            // Show download notification
+            const notification = document.createElement('div');
+            notification.className = 'download-notification';
+            notification.innerHTML = '<i class="fas fa-download"></i> Download started...';
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        });
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
