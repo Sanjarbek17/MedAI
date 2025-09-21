@@ -32,7 +32,14 @@
                     <span class="text-xl font-semibold text-gray-900">MedikAI Classifier</span>
                 </div>
                 <div class="flex items-center space-x-6">
+                    <a href="/api" class="text-gray-600 hover:text-primary transition-colors">📋 API Docs</a>
                     <a href="#about" class="text-gray-600 hover:text-primary transition-colors">About</a>
+                    <a href="/patient"
+                        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">🚑 Patient
+                        Emergency</a>
+                    <a href="/driver"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">🚗
+                        Driver Dashboard</a>
                     <a href="#" class="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors">
                         <div class="w-4 h-4 flex items-center justify-center">
                             <i class="ri-github-line"></i>
@@ -47,11 +54,35 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div id="homepage" class="text-center mb-12">
             <div class="max-w-3xl mx-auto">
-                <h1 class="text-4xl font-bold text-gray-900 mb-6">COVID-19 Chest X-Ray Classifier</h1>
-                <p class="text-xl text-gray-600 mb-8">Upload chest X-ray images to receive AI-powered classification
-                    results for COVID-19, pneumonia, and normal cases using advanced deep learning technology.</p>
+                <h1 class="text-4xl font-bold text-gray-900 mb-6">MedikAI - Medical AI Platform</h1>
+                <p class="text-xl text-gray-600 mb-8">Advanced AI-powered medical services including COVID-19 chest
+                    X-ray classification and real-time ambulance dispatch system.</p>
 
+                <!-- Ambulance Dispatch System Section -->
+                <div class="bg-gradient-to-r from-red-500 to-blue-600 rounded-2xl shadow-lg p-8 mb-8 text-white">
+                    <h2 class="text-3xl font-bold mb-4">🚑 Emergency Ambulance Dispatch</h2>
+                    <p class="text-lg mb-6">Real-time ambulance dispatch system with live tracking and fastest route
+                        optimization</p>
+                    <div class="flex justify-center space-x-4">
+                        <a href="/patient"
+                            class="bg-white text-red-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            📱 Patient Emergency App
+                        </a>
+                        <a href="/driver"
+                            class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            🚗 Driver Dashboard
+                        </a>
+                    </div>
+                    <div class="mt-6 text-sm opacity-90">
+                        <p>✓ Real-time GPS tracking ✓ Automatic driver matching ✓ Live route optimization</p>
+                    </div>
+                </div>
+
+                <!-- X-Ray Classification Section -->
                 <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">COVID-19 Chest X-Ray Classifier</h2>
+                    <p class="text-gray-600 mb-6">Upload chest X-ray images to receive AI-powered classification results
+                        for COVID-19, pneumonia, and normal cases.</p>
                     <div id="upload-section">
                         <div class="upload-zone border-2 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer"
                             id="uploadZone">

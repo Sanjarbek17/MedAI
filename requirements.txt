@@ -4,3 +4,6 @@ Jinja2==3.1.2
 gunicorn==21.2.0
 ultralytics
 Pillow
+Flask-SocketIO==5.3.6
+geopy==2.4.0
+python-socketio==5.9.0
