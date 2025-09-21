@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function handlePrediction() {
-        if (!uploadedFilename) {
+        if (!currentFile) {
             showErrorMessage('Please upload a file first');
             return;
         }
@@ -160,14 +160,13 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingSection.classList.remove('hidden');
 
         try {
-            const response = await fetch('/predict', {
+            // Create FormData to send the actual file
+            const formData = new FormData();
+            formData.append('file', currentFile);
+
+            const response = await fetch('/image', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    filename: uploadedFilename
-                })
+                body: formData
             });
 
             const result = await response.json();

@@ -65,9 +65,62 @@ def image():
     model_path = "models/four_classes.pt"
     image_data = Image.open(image.stream)
 
-    clasification_image = image_classification(model_path=model_path, image=image_data)
+    # Get classification results
+    clasification_result = image_classification(model_path=model_path, image=image_data)
 
-    return clasification_image
+    # Parse the JSON string returned by image_classification
+    import json
+
+    classification_data = json.loads(clasification_result)
+
+    # Transform to match predict endpoint format
+    if classification_data and len(classification_data) > 0:
+        top_prediction = classification_data[0]  # Get the highest confidence prediction
+
+        # Create prediction object matching predict endpoint format
+        prediction = {
+            "class": top_prediction["label"],
+            "confidence": int(
+                top_prediction["confidence"] * 100
+            ),  # Convert to percentage
+        }
+
+        # Add individual class confidences (initialize to 0)
+        prediction["covid"] = 0
+        prediction["normal"] = 0
+        prediction["pneumonia"] = 0
+
+        # Set the confidence for the predicted class
+        class_name = top_prediction["label"].lower()
+        if "covid" in class_name:
+            prediction["covid"] = prediction["confidence"]
+        elif "normal" in class_name:
+            prediction["normal"] = prediction["confidence"]
+        elif "pneumonia" in class_name:
+            prediction["pneumonia"] = prediction["confidence"]
+
+        # Distribute remaining confidence among other classes based on other predictions
+        remaining_confidence = 100 - prediction["confidence"]
+        other_predictions = (
+            classification_data[1:3] if len(classification_data) > 1 else []
+        )
+
+        for pred in other_predictions:
+            pred_class = pred["label"].lower()
+            pred_conf = int(pred["confidence"] * 100)
+            if "covid" in pred_class and prediction["covid"] == 0:
+                prediction["covid"] = min(pred_conf, remaining_confidence)
+                remaining_confidence -= prediction["covid"]
+            elif "normal" in pred_class and prediction["normal"] == 0:
+                prediction["normal"] = min(pred_conf, remaining_confidence)
+                remaining_confidence -= prediction["normal"]
+            elif "pneumonia" in pred_class and prediction["pneumonia"] == 0:
+                prediction["pneumonia"] = min(pred_conf, remaining_confidence)
+                remaining_confidence -= prediction["pneumonia"]
+
+        return jsonify({"success": True, "prediction": prediction})
+    else:
+        return jsonify({"error": "No classification results"}), 500
 
 
 @app.route("/iscovid", methods=["POST"])
@@ -77,9 +130,51 @@ def iscovid_check():
     model_path = "models/is_covid.pt"
     image_data = Image.open(image.stream)
 
-    clasification_image = image_classification(model_path=model_path, image=image_data)
+    # Get classification results
+    clasification_result = image_classification(model_path=model_path, image=image_data)
 
-    return clasification_image
+    # Parse the JSON string returned by image_classification
+    import json
+
+    classification_data = json.loads(clasification_result)
+
+    # Transform to match predict endpoint format
+    if classification_data and len(classification_data) > 0:
+        top_prediction = classification_data[0]  # Get the highest confidence prediction
+
+        # Create prediction object matching predict endpoint format
+        prediction = {
+            "class": top_prediction["label"],
+            "confidence": int(
+                top_prediction["confidence"] * 100
+            ),  # Convert to percentage
+        }
+
+        # For COVID detection model, set COVID vs Normal
+        prediction["covid"] = 0
+        prediction["normal"] = 0
+        prediction["pneumonia"] = 0  # Keep for consistency
+
+        # Set the confidence for the predicted class
+        class_name = top_prediction["label"].lower()
+        if "covid" in class_name:
+            prediction["covid"] = prediction["confidence"]
+            # Set normal as the complement for binary classification
+            if len(classification_data) > 1:
+                prediction["normal"] = int(classification_data[1]["confidence"] * 100)
+            else:
+                prediction["normal"] = 100 - prediction["confidence"]
+        else:
+            prediction["normal"] = prediction["confidence"]
+            # Set covid as the complement for binary classification
+            if len(classification_data) > 1:
+                prediction["covid"] = int(classification_data[1]["confidence"] * 100)
+            else:
+                prediction["covid"] = 100 - prediction["confidence"]
+
+        return jsonify({"success": True, "prediction": prediction})
+    else:
+        return jsonify({"error": "No classification results"}), 500
 
 
 @app.route("/predict", methods=["POST"])
