@@ -224,7 +224,6 @@ logs/
 *.joblib
 *.h5
 *.pb
-models/
 checkpoints/
 
 # Node.js (if you add any JS build tools)
