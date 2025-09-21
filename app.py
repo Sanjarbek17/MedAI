@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, jsonify, url_for
 import os
+from PIL import Image
 from werkzeug.utils import secure_filename
 import uuid
 import time
 import random
+
+from test_model import image_classification
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "your-secret-key-here"
@@ -53,6 +56,30 @@ def upload_file():
         ),
         400,
     )
+
+
+@app.route("/image", methods=["POST"])
+def image():
+    image = request.files["file"]
+    # Your  model trained with 4 classes is path
+    model_path = "models/four_classes.pt"
+    image_data = Image.open(image.stream)
+
+    clasification_image = image_classification(model_path=model_path, image=image_data)
+
+    return clasification_image
+
+
+@app.route("/iscovid", methods=["POST"])
+def iscovid_check():
+    image = request.files["file"]
+    # Your  model trained with 2 classes is path (check Covid).
+    model_path = "models/is_covid.pt"
+    image_data = Image.open(image.stream)
+
+    clasification_image = image_classification(model_path=model_path, image=image_data)
+
+    return clasification_image
 
 
 @app.route("/predict", methods=["POST"])
