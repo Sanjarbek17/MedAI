@@ -160,24 +160,88 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingSection.classList.remove('hidden');
 
         try {
-            // Create FormData to send the actual file
-            const formData = new FormData();
-            formData.append('file', currentFile);
+            // Step 1: First check if the image is a chest X-ray
+            const formDataChest = new FormData();
+            formDataChest.append('file', currentFile);
 
-            const response = await fetch('/image', {
+            console.log('Step 1: Validating if image is a chest X-ray...');
+            const chestResponse = await fetch('/chest', {
                 method: 'POST',
-                body: formData
+                body: formDataChest
             });
 
-            const result = await response.json();
+            const chestResult = await chestResponse.json();
 
-            if (response.ok) {
-                displayResults(result.prediction);
+            if (!chestResponse.ok) {
+                showErrorMessage(chestResult.error || 'Chest validation failed');
+                loadingSection.classList.add('hidden');
+                previewSection.classList.remove('hidden');
+                return;
+            }
+
+            console.log('Chest validation result:', chestResult.prediction);
+
+            // Check if the image is actually a chest X-ray
+            // The model returns "chest_image" for chest X-rays and "not_chest" for non-chest images
+            const isChestImage = chestResult.prediction.class.toLowerCase().includes('chest_image') ||
+                               (chestResult.prediction.class.toLowerCase().includes('chest') && 
+                                !chestResult.prediction.class.toLowerCase().includes('not_chest'));
+
+            if (!isChestImage) {
+                showErrorMessage(`This does not appear to be a chest X-ray image. Detected: ${chestResult.prediction.class} (${chestResult.prediction.confidence}% confidence). Please upload a valid chest X-ray.`);
+                loadingSection.classList.add('hidden');
+                previewSection.classList.remove('hidden');
+                return;
+            }
+
+            // Step 2: Check if the chest image shows COVID
+            const formData1 = new FormData();
+            formData1.append('file', currentFile);
+
+            console.log('Step 2: Checking for COVID...');
+            const covidResponse = await fetch('/iscovid', {
+                method: 'POST',
+                body: formData1
+            });
+
+            const covidResult = await covidResponse.json();
+
+            if (!covidResponse.ok) {
+                showErrorMessage(covidResult.error || 'COVID check failed');
+                loadingSection.classList.add('hidden');
+                previewSection.classList.remove('hidden');
+                return;
+            }
+
+            console.log('COVID check result:', covidResult.prediction);
+
+            // Step 3: Use detailed classification for final results
+            const formData2 = new FormData();
+            formData2.append('file', currentFile);
+
+            console.log('Step 3: Getting detailed classification...');
+            const detailResponse = await fetch('/image', {
+                method: 'POST',
+                body: formData2
+            });
+
+            const detailResult = await detailResponse.json();
+
+            if (detailResponse.ok) {
+                // Combine results: use detailed classification but inform with COVID check
+                const finalResult = detailResult.prediction;
+                
+                // Log all results for comparison
+                console.log('Chest validation result:', chestResult.prediction);
+                console.log('COVID-specific model result:', covidResult.prediction);
+                console.log('4-class model result:', finalResult);
+                
+                displayResults(finalResult);
                 loadingSection.classList.add('hidden');
                 homepage.classList.add('hidden');
                 resultsSection.classList.remove('hidden');
             } else {
-                showErrorMessage(result.error || 'Prediction failed');
+                showErrorMessage(detailResult.error || 'Detailed classification failed');
                 loadingSection.classList.add('hidden');
                 previewSection.classList.remove('hidden');
             }

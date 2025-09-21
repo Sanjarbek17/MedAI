@@ -58,6 +58,44 @@ def upload_file():
     )
 
 
+@app.route("/chest", methods=["POST"])
+def chest_check():
+    image = request.files["file"]
+    # Model to check if image is a chest X-ray
+    model_path = "models/only_chest.pt"
+    image_data = Image.open(image.stream)
+
+    # Get classification results
+    clasification_result = image_classification(model_path=model_path, image=image_data)
+
+    # Parse the JSON string returned by image_classification
+    import json
+
+    classification_data = json.loads(clasification_result)
+
+    # Transform to match predict endpoint format
+    if classification_data and len(classification_data) > 0:
+        top_prediction = classification_data[0]  # Get the highest confidence prediction
+
+        # Create prediction object matching predict endpoint format
+        prediction = {
+            "class": top_prediction["label"],
+            "confidence": int(
+                top_prediction["confidence"] * 100
+            ),  # Convert to percentage
+        }
+
+        # For chest validation, we don't need covid/normal/pneumonia breakdown
+        # Just return whether it's chest or not
+        prediction["covid"] = 0
+        prediction["normal"] = 0
+        prediction["pneumonia"] = 0
+
+        return jsonify({"success": True, "prediction": prediction})
+    else:
+        return jsonify({"error": "No classification results"}), 500
+
+
 @app.route("/image", methods=["POST"])
 def image():
     image = request.files["file"]
